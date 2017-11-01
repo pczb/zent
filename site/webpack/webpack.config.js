@@ -81,14 +81,16 @@ module.exports = {
 
     new HappyPack({
       id: 'js',
+      loaders: [babelLoader],
       threadPool: happyThreadPool,
-      loaders: [babelLoader]
+      verbose: false
     }),
 
     new HappyPack({
       id: 'md',
+      loaders: getMarkdownLoaders(babelLoader),
       threadPool: happyThreadPool,
-      loaders: getMarkdownLoaders(babelLoader)
+      verbose: false
     })
   ],
 

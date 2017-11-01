@@ -1,8 +1,13 @@
 const webpack = require('webpack');
 const HappyPack = require('happypack');
+const Dashboard = require('webpack-dashboard');
+const DashboardPlugin = require('webpack-dashboard/plugin');
+
 const vendorEntry = require('./vendor-entry');
 const base = require('./webpack.config');
 const happyThreadPool = require('./happypack-thread-pool');
+
+const dashboard = new Dashboard();
 
 module.exports = Object.assign({}, base, {
   entry: {
@@ -35,7 +40,6 @@ module.exports = Object.assign({}, base, {
 
     new HappyPack({
       id: 'styles',
-      threadPool: happyThreadPool,
       loaders: [
         {
           loader: 'style-loader',
@@ -56,7 +60,11 @@ module.exports = Object.assign({}, base, {
             sourceMap: true
           }
         }
-      ]
-    })
+      ],
+      threadPool: happyThreadPool,
+      verbose: false
+    }),
+
+    new DashboardPlugin(dashboard.setData)
   ])
 });
