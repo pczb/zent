@@ -8,7 +8,7 @@ group: Data Display
 
 This is a block header.
 
-## API
+### API
 
 | Property            | Description               | Type             | Default      | Alternative     |
 |------          |------              |------            |--------    |--------   |

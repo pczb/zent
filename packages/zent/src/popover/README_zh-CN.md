@@ -83,7 +83,7 @@ isOutside 的 `data` 包含两个属性：`contentNode` 和 `triggerNode`。
 | contentVisible     | 弹层当前是否打开                                         | bool                   |
 | onTriggerRefChange | trigger的ref改变的时候需要调用的回掉函数, 只有在重写 render 函数的时候需要这个函数 | func:(instance) |
 
-### Position API
+#### Position API
 
 Positon用于给弹层提供定位的, 内置12种基础定位, 可以添加自定义定位算法. Popover 上的 `cushion` 参数会影响定位, 通常用来提供一定量的偏移量。
 

@@ -8,15 +8,15 @@ group: Data Entry
 
 Time pickers, provides basic time choosing functionality.
 
-## Guides
+### Guides
 
 - Four pickers：`DatePicker`, `MonthPicker`, `WeekPicker` and `RangePicker`.
 - `DatePicker` and `RangePicker` can use `showTime` to allow time selection.
 - Date formats can be customized using `format`, you can find formating details at the end of this page.
 
-## API
+### API
 
-### Common API
+#### Common API
 
 | Property     | Description              | Type      | Default       | Required |
 | ------------ | ------------------------ | -------------- | --------------- | ---- |
@@ -37,7 +37,7 @@ Time pickers, provides basic time choosing functionality.
 | popPosition  | Popup align position   | oneOf(['left', 'right'])  | 'left'    | No   |
 
 
-### DatePicker
+#### DatePicker
 
 | Property      | Description         | Type      | Default      | Required |
 | ------------ | ------------------------ | -------------- | --------------- | ---- |
@@ -60,7 +60,7 @@ Time pickers, provides basic time choosing functionality.
 - Return value of `disabledDate` is an object, there are three functions within this object: `disabledHour`, `disabledMinute` and `disabledSecond`.
 - Only date format is allowed in `format`, time format will be appended when `showTime` is `true`.
 
-### WeekPicker
+#### WeekPicker
 
 | Property      | Description             | Type    | Default    | Required |
 | ------------ | ------------------------ | -------------- | --------------- | ---- |
@@ -74,7 +74,7 @@ Time pickers, provides basic time choosing functionality.
 | placeholder  | Placeholder text              | string    | `请选择日期`   | No    |
 | defaultTime   | Default time value     | string         | `'00:00:00'`   | No    |
 
-### MonthPicker
+#### MonthPicker
 
 | Property     | Description         | Type       | Default    | Required |
 | ------------ | ------------------------ | -------------- | --------------- | ---- |
@@ -85,7 +85,7 @@ Time pickers, provides basic time choosing functionality.
 | placeholder  | Placeholder text     | string  | `请选择月份`   | No    |
 
 
-### RangePicker
+#### RangePicker
 
 | Property     | Description     | Type    | Default   | Required |
 | ------------ | ---------- | ------ | -------------- | ---- |
@@ -107,7 +107,7 @@ Time pickers, provides basic time choosing functionality.
 - `disabledTime` has an additional argument `type` like in `DatePicker`, its value is `start` or `end`.
 - `onClick(val, type)`, the `type` is the same as `disabledTime`.
 
-### Format string
+#### Format string
 
 |          | Format character | Output |
 | -------- | -------- | -------- |

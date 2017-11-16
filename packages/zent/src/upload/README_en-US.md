@@ -4,7 +4,7 @@ path: component/upload
 group: Data Entry
 ---
 
-# Upload
+## Upload
 
 Image uploader.
 

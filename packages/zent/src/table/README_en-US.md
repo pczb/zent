@@ -65,7 +65,7 @@ onChange will throw an object containing pagination and sorting parameters：
 }
 ```
 
-### columns
+#### columns
 
 | Props         | Description                                  | Type                   | Default     | Required |
 | ---------- | ----------------------------------- | -------------------- | ------- | ---- |
@@ -77,7 +77,7 @@ onChange will throw an object containing pagination and sorting parameters：
 | bodyRender | Render function of this column | function |  |         | no    |
 | textAlign  | Text alignment | string |    `''`     | no    |
 
-### selection
+#### selection
 
 | Props              | Description              | Type    |  Default | Required |
 | --------------- | --------------- | ----- | ---- | ----- |
@@ -86,7 +86,7 @@ onChange will throw an object containing pagination and sorting parameters：
 | needCrossPage |   Cross-page multiple choice or not | bool | `false` | no    |
 | onSelect(@selectedkeys, @selectedRows, @currentRow) | Check callback | func  |  | no    |
 
-### pageInfo
+#### pageInfo
 
 | Props              | Description              | Type    |  Default | Required |
 | --------------- | --------------- | ----- | ---- | ----- |
@@ -97,7 +97,7 @@ onChange will throw an object containing pagination and sorting parameters：
 | total | Total number of entries**[deprecated]**   | number | `0` | no    |
 | limit | Number per page**[deprecated]**   | number |  | no    |
 
-### expandation
+#### expandation
 
 | Props              | Description              | Type    |  Default | Required |
 | --------------- | --------------- | ----- | ---- | ----- |

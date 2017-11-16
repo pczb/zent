@@ -5,7 +5,7 @@ path: component/upload
 group: 数据
 ---
 
-# Upload 图片上传
+## Upload 图片上传
 
 图片上传
 

@@ -14,7 +14,7 @@ This component is used to preview images.
 -   Next image and previous image can be selected.
 -   Images can be rotated.
 
-## API
+### API
 
 | Property            | Description             | Type             | Default      | Alternative     |
 |------          |------              |------            |--------    |--------   |

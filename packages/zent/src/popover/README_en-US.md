@@ -84,7 +84,7 @@ All trigger's base class,  implement custom trigger need to inherit this class, 
 | contentVisible     | whether ccurent pop is opened or not                                          | bool                   |
 | onTriggerRefChange | when ref changes, callback is executed. and it is only needs when you rewrite render function | func:(instance) |
 
-### Position API
+#### Position API
 
 Position is used to position layer. there is 12 kinds of basic positions. and you can add custom position algorithm. the `cushion` on Popover affect position. it usually provides offset.
 

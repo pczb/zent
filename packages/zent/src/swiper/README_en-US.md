@@ -24,7 +24,7 @@ Swiper is used for a group of flat content circulated.
 | className | custom classname | string | `''` | |
 | prefix | custom prefix | string | `'zent'` | |
 
-### Instance Methods
+#### Instance Methods
 
 | Method Name | Instruction | Parameter | Parameter Description |
 | ----------- | --------------------------------------- | ------ | ------ |
