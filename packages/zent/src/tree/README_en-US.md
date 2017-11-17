@@ -16,9 +16,6 @@ Tree widget is used to build and manipulate trees. such as files, organization s
 
 ### API
 
-
-#### Tree
-
 | Property                 | Description                                                        | Type                 | Default     | Alternative                |
 | ------------------- | ------------------------------------------------------------| ------------------- | ---------- | -------------------- |
 | dataType            | data structure, default is tree                                    | string             | `'tree'`   | `'plain'`            |

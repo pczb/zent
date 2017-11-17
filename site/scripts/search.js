@@ -19,6 +19,7 @@ const {
   drop,
   filter,
   find,
+  flatten,
   forEach,
   join,
   map,
@@ -35,8 +36,7 @@ const {
   trim
 } = require('ramda');
 const fm = require('front-matter');
-const himalaya = require('himalaya');
-const md = require('markdown-it')();
+const transliteration = require('transliteration');
 
 const LIST_STATICS = require('../src/nav.static');
 const SRC = resolve(process.cwd(), '../packages/zent/src');
@@ -77,22 +77,8 @@ function trimLine(longString) {
   return str;
 }
 
-function granding(str, regexp) {
-  const splitByLine = str.split('\n');
-  const name = trimLine(splitByLine[0]);
-  splitByLine.shift();
-  if (regexp) {
-    const splitByReg = splitByLine.join('\n').split(regexp);
-    const content = trimLine(splitByReg[0]);
-    splitByReg.shift();
-    const children = splitByReg;
-    return children.length ? { name, content, children } : { name, content };
-  }
-  return { name, content: trimLine(splitByLine.join('\n')) };
-}
-
 function parseAPITable(str) {
-  const result = {};
+  const result = [];
 
   const subKeys = pipe(
     split('\n'),
@@ -103,7 +89,7 @@ function parseAPITable(str) {
     drop(1)
   )(str);
 
-  let key;
+  let pos;
 
   pipe(
     split('\n'),
@@ -115,10 +101,12 @@ function parseAPITable(str) {
         map(trim),
         addIndex(map)((value, index) => {
           if (index === 0) {
-            result[value] = {};
-            key = value;
+            result.push({
+              APIKey: value
+            });
+            pos = result.length - 1;
           } else {
-            result[key][subKeys[index - 1]] = value;
+            result[pos][subKeys[index - 1]] = value;
           }
         })
       )
@@ -132,7 +120,7 @@ function pureTable(str) {
   return pipe(split('\n'), all(test(/\|/)))(str);
 }
 
-function extractInfo(str) {
+function extractContent(str) {
   return pipe(split('\n'), reject(test(/\|/)), join('\n'), trimLine)(str);
 }
 
@@ -140,42 +128,61 @@ function extractTable(str) {
   return pipe(split('\n'), filter(test(/\|/)), join('\n'))(str);
 }
 
-function parseAPI(API) {
-  if (API.content) {
-    const content = trimLine(API.content);
-    if (pureTable(content)) {
-      API.content = parseAPITable(content);
-    } else {
-      API.info = extractInfo(content);
-      API.content = parseAPITable(extractTable(content));
-    }
-  }
-
-  if (API.children && API.children.length) {
-    API.children = map(
-      pipe(granding, obj => {
-        if (obj.content && /\|/.test(obj.content)) {
-          const content = trimLine(obj.content);
-          if (pureTable(content)) {
-            obj.content = parseAPITable(content);
-          } else {
-            obj.info = extractInfo(content);
-            obj.content = parseAPITable(extractTable(content));
-          }
-        }
-        return obj;
-      }),
-      API.children
-    );
-  }
-  return API;
-}
-
 function jigsaw() {
+  const groups = [];
+  let path;
+  let objectID = 100000;
+  const extractPath = function(str) {
+    path = pipe(fm, prop('attributes'), prop('path'))(str);
+    return str;
+  };
   Object.keys(NAMES).forEach(i18n => {
+    const json = [];
     const list = LIST_STATICS[i18n][1].groups;
-    const groups = [];
-    const json = pipe(
+    const granding = curry(function(str, regexp, saveCompName) {
+      const base = split('\n', str);
+      let name = saveCompName ? nth(0, base) : `${compName} ${nth(0, base)}`;
+      if (saveCompName) {
+        compName = name;
+      }
+      const anchorPath = `${pipe(split('-'), nth(0))(
+        i18n
+      )}/${path}#${transliteration.slugify(name)}`;
+      const intermediate = pipe(
+        drop(1),
+        join('\n'),
+        split(regexp),
+        map(trimLine)
+      )(base);
+      let content = test(/#{3,}\s/, nth(0, intermediate))
+        ? ''
+        : trimLine(nth(0, intermediate));
+      if (test(/\|/, content)) {
+        const contentCopy = content;
+        content = extractContent(content) || '';
+        const API = pipe(extractTable, parseAPITable)(contentCopy);
+        json.push({
+          name,
+          anchorPath,
+          content,
+          objectID: objectID++,
+          compName,
+          API
+        });
+      } else if (content) {
+        json.push({
+          name,
+          anchorPath,
+          content,
+          objectID: objectID++,
+          compName
+        });
+      }
+      return test(/#{3,}\s/, nth(0, intermediate))
+        ? intermediate
+        : drop(1, intermediate);
+    });
+    pipe(
       readdirSync,
       map(pipe(concat('/'), concat(SRC))),
       filter(isDir),
@@ -184,51 +191,19 @@ function jigsaw() {
       map(str =>
         pipe(
           readFileToString,
+          extractPath,
           split(/\n##\s/),
-          map(
-            pipe(
-              replace(/<style>[^<]*<\/style>/g, ''),
-              replace(/<!--[^>]*-->/g, '')
-            )
-          ),
-          map(sub => {
-            if (/\n###\s/.test(sub)) {
-              const result = granding(sub, /\n###\s/);
-              if (result.children && result.children.length) {
-                result.children = map(
-                  curry(granding)(__, /\n####\s/),
-                  result.children
-                );
-                pipe(
-                  filter(
-                    block =>
-                      block.name.trim() !== 'API' &&
-                      block.children &&
-                      block.children.length
-                  ),
-                  map(block => {
-                    block.children = map(
-                      curry(granding)(__, null),
-                      block.children
-                    );
-                    return block;
-                  })
-                )(result.children);
-              }
-              let APIBlock = pipe(
-                filter(block => block.name.trim() === 'API'),
-                nth(0)
-              )(result.children);
-              if (APIBlock) {
-                APIBlock = parseAPI(APIBlock);
-              }
-              return result;
-            }
-            return sub;
-          }),
           drop(1),
           nth(0),
-          beautyConsole
+          replace(/<style>[^<]*<\/style>/g, ''),
+          replace(/<!--[^>]*-->/g, ''),
+          trimLine,
+          granding(__, /\n###\s/, true),
+          map(granding(__, /\n####\s/, false)),
+          flatten,
+          map(granding(__, /\n#####\s/, false)),
+          flatten,
+          map(granding(__, /\n######\s/, false))
         )(str)
       )
     )(SRC);
