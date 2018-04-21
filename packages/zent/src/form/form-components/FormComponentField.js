@@ -10,11 +10,18 @@ import NumberInputField from './NumberInputField';
 import RadioGroupField from './RadioGroupField';
 import SelectField from './SelectField';
 import SwitchField from './SwitchField';
+import TimePickerField from './TimePickerField';
 import Field from '../Field';
 
 export class FormCheckboxField extends Component {
   render() {
     return <Field {...this.props} component={CheckboxField} />;
+  }
+}
+
+export class FormTimePickerField extends Component {
+  render() {
+    return <Field {...this.props} component={TimePickerField} />;
   }
 }
 
